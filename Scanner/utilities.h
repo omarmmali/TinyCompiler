@@ -1,0 +1,20 @@
+#pragma once
+
+#include <bits/stdc++.h>
+using namespace std;
+
+namespace CONSTANTS {
+  const int TOKEN_ID_START = 1000;
+  const string TOKEN_NAMES[] = {
+  "NUMBER", "STRING", "COMMENT", "RESERVED", "IDENTIFIER", "FUNCTION_CALL",
+  "TERM", "ARITHMETIC_OPERATOR", "EQUATION", "EXPRESSION", "ASSIGNMENT_STATEMENT",
+  "DATATYPE","DECLARATION_STATEMENT", "WRITE_STATEMENT", "READ_STATEMENT", "RETURN_STATEMENT",
+  "CONDITIONAL_OPERATOR", "CONDITION", "BOOLEAN_OPERATOR", "CONDITIONAL_STATEMENT",
+  "IF_STATEMENT", "ELSE_IF_STATEMENT", "ELSE_STATEMENT", "REPEAT_STATEMENT",
+  "FUNCTION_NAME", "PARAMETER", "FUNCTION_DECLARATION", "FUNCTION_BODY",
+  "FUNCTION_STATEMENT", "MAIN_FUNCTION", "PROGRAM"
+  };
+  const string RESERVED_WORDS[] = {
+    "int", "float", "string", "read", "write", "repeat", "until", "if", "elseif", "else", "then", "return", "endl"
+  };
+};
