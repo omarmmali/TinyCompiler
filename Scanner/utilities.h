@@ -62,7 +62,7 @@ namespace CONSTANTS {
   "FRONT_SLASH",
   "COMMENT_START",
   "COMMENT_END",
-  "END_OF_FILE"
+  "END_OF_LINE"
   };
   const std::string RESERVED_WORDS[] = {
     "int", "double", "string", "read", "write", "repeat", "until", "end",

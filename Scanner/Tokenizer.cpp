@@ -1,5 +1,6 @@
 #include "Tokenizer.h"
 
+
 void Tokenizer::add_symbol() {
     dfa.add_state(TokenType::PARAN_OPEN, true);
     dfa.add_state(TokenType::PARAN_CLOSE, true);
@@ -179,9 +180,9 @@ std::vector<Token> Tokenizer::tokenize(std::string in) {
   if(ret.size() == 0) {
     ret.push_back(Token());
   }
-  Token eof;
-  eof.token_type = TokenType::END_OF_FILE;
-  eof.lexeme = "EOF";
-  ret.push_back(eof);
+  Token eol;
+  eol.token_type = TokenType::END_OF_LINE;
+  eol.lexeme = "";
+  ret.push_back(eol);
   return ret;
 }

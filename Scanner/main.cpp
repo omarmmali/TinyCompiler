@@ -3,6 +3,7 @@
 #include "Tokenizer.h"
 
 int main() {
+    //freopen("input.txt", "r", stdin);
     Tokenizer t;
     std::string in;
     while(std::getline(std::cin, in)) {

@@ -1,0 +1,7 @@
+int main()
+    int val1, val2;
+    val1 := 2;
+    val2 := 3;
+    write val1;
+    write val2;
+end

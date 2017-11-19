@@ -54,7 +54,7 @@ enum TokenType {
   FRONT_SLASH,
   COMMENT_START,
   COMMENT_END,
-  END_OF_FILE
+  END_OF_LINE
 };
 
 struct Token {

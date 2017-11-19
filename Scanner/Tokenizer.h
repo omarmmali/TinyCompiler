@@ -3,7 +3,7 @@
 
 class Tokenizer {
 private:
-  DFA dfa;
+  DFA<char> dfa;
   void add_symbol();
   void add_identifier();
   void add_integer();
@@ -14,5 +14,4 @@ private:
 public:
   Tokenizer();
   std::vector <Token> tokenize(std::string); 
-
 };
