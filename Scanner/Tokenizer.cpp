@@ -1,6 +1,6 @@
 #include "Tokenizer.h"
 
-void Tokenizer::add_symbols() {
+void Tokenizer::add_symbol() {
     dfa.add_state(TokenType::PARAN_OPEN, true);
     dfa.add_state(TokenType::PARAN_CLOSE, true);
     
@@ -8,18 +8,46 @@ void Tokenizer::add_symbols() {
     dfa.add_state(TokenType::OPERATOR_MINUS, true);
     dfa.add_state(TokenType::OPERATOR_TIMES, true);
     dfa.add_state(TokenType::OPERATOR_ASSIGNMENT, true);
-    
+    dfa.add_state(TokenType::SEMICOLON, true);
     dfa.add_state(TokenType::WHITESPACE, true);
+    dfa.add_state(TokenType::COMMA, true);
+    dfa.add_state(TokenType::COLON, false);
     
+    dfa.add_state(TokenType::LOGIC_AND_OPERATOR, true);
+    dfa.add_state(TokenType::LOGIC_OR_OPERATOR, true);
+    dfa.add_state(TokenType::AND_OPERATOR, true);
+    dfa.add_state(TokenType::OR_OPERATOR, true);
+
     dfa.add_state(TokenType::QUOTE_OPEN, false);
     dfa.add_state(TokenType::QUOTE_CLOSE, true);
+
+    dfa.add_state(TokenType::EQUAL_OPERATOR, true);
+    dfa.add_state(TokenType::LESS_THAN_OPERATOR, true);
+    dfa.add_state(TokenType::GREATER_THAN_OPERATOR, true);
+    dfa.add_state(TokenType::NOT_EQUAL_OPERATOR, true);
 
     dfa.add_transition(0, '(', TokenType::PARAN_OPEN);
     dfa.add_transition(0, ')', TokenType::PARAN_CLOSE);
     dfa.add_transition(0, '+', TokenType::OPERATOR_PLUS);
     dfa.add_transition(0, '-', TokenType::OPERATOR_MINUS);
     dfa.add_transition(0, '*', TokenType::OPERATOR_TIMES);
-    dfa.add_transition(0, '=', TokenType::OPERATOR_ASSIGNMENT);
+
+    dfa.add_transition(0, ':', TokenType::COLON);
+    dfa.add_transition(TokenType::COLON, '=', TokenType::OPERATOR_ASSIGNMENT);
+    
+    
+    dfa.add_transition(0, '=', TokenType::EQUAL_OPERATOR);
+    dfa.add_transition(0, '<', TokenType::LESS_THAN_OPERATOR);
+    dfa.add_transition(0, '>', TokenType::GREATER_THAN_OPERATOR);
+    dfa.add_transition(TokenType::LESS_THAN_OPERATOR, '>', TokenType::NOT_EQUAL_OPERATOR);
+
+    dfa.add_transition(0, '&', TokenType::AND_OPERATOR);
+    dfa.add_transition(TokenType::AND_OPERATOR, '&', TokenType::LOGIC_AND_OPERATOR);
+    dfa.add_transition(0, '|', TokenType::OR_OPERATOR);
+    dfa.add_transition(TokenType::OR_OPERATOR, '|', TokenType::LOGIC_OR_OPERATOR);
+
+    dfa.add_transition(0, ';', TokenType::SEMICOLON);
+    dfa.add_transition(0, ',', TokenType::COMMA);
 
     dfa.add_transition(0, ' ', TokenType::WHITESPACE);
     dfa.add_transition(TokenType::WHITESPACE, ' ', TokenType::WHITESPACE);
@@ -27,6 +55,8 @@ void Tokenizer::add_symbols() {
 
 void Tokenizer::add_identifier() {
   dfa.add_state(TokenType::IDENTIFIER, true);
+  
+  dfa.add_transition(0, '_', TokenType::IDENTIFIER);
 
   for(char i = 'a'; i <= 'z'; i++) {
     dfa.add_transition(0, i, TokenType::IDENTIFIER);
@@ -34,6 +64,10 @@ void Tokenizer::add_identifier() {
     dfa.add_transition(TokenType::IDENTIFIER, i, TokenType::IDENTIFIER);
     dfa.add_transition(TokenType::IDENTIFIER, std::toupper(i), TokenType::IDENTIFIER);
   }
+  for(char i = '0'; i <= '9'; i++) {
+    dfa.add_transition(TokenType::IDENTIFIER, i, TokenType::IDENTIFIER);
+  }
+
 }
 
 void Tokenizer::add_integer() {
@@ -73,9 +107,20 @@ void Tokenizer::add_string() {
   dfa.add_transition(TokenType::QUOTE_OPEN, '"', TokenType::STRING);
 }
 
+bool check_if_lexeme_is_reserved_keyword(std::string lexeme) {
+  for(int i = 0; i < lexeme.size(); i++) {
+    lexeme[i] = std::tolower(lexeme[i]);
+  }
+  for(int i = 0; i < 13; i++) {
+    if(lexeme == CONSTANTS::RESERVED_WORDS[i]) {
+      return true;
+    }
+  }
+  return false;
+}
 Tokenizer::Tokenizer() {
   dfa.add_state(0, false);
-  add_symbols();
+  add_symbol();
   add_identifier();
   add_integer();
   add_double();
@@ -94,7 +139,12 @@ std::vector<Token> Tokenizer::tokenize(std::string in) {
     if(dfa.is_accepted() && !dfa.will_accept(next)) {
       Token tmp_token;
       tmp_token.lexeme = current_lexeme;
-      tmp_token.token_type = (TokenType)dfa.get_current_state();
+      if(check_if_lexeme_is_reserved_keyword(current_lexeme)) {
+        tmp_token.token_type = TokenType::RESERVED_WORD;
+      }
+      else {
+        tmp_token.token_type = (TokenType)dfa.get_current_state();
+      }
       ret.push_back(tmp_token);
       current_lexeme.clear();
       dfa.reset();
