@@ -10,6 +10,7 @@ private:
   void add_double();
   void add_string();
   void add_reserved_keywords();
+  void add_comment();
 public:
   Tokenizer();
   std::vector <Token> tokenize(std::string); 

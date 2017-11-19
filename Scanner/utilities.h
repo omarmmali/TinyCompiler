@@ -59,6 +59,9 @@ namespace CONSTANTS {
   "LOGIC_OR_OPERATOR",
   "AND_OPERATOR",
   "OR_OPERATOR",
+  "FRONT_SLASH",
+  "COMMENT_START",
+  "COMMENT_END",
   "END_OF_FILE"
   };
   const std::string RESERVED_WORDS[] = {

@@ -12,7 +12,11 @@ void Tokenizer::add_symbol() {
     dfa.add_state(TokenType::WHITESPACE, true);
     dfa.add_state(TokenType::COMMA, true);
     dfa.add_state(TokenType::COLON, false);
-    
+    dfa.add_state(TokenType::FRONT_SLASH, false);
+    dfa.add_state(TokenType::COMMENT_START, false);
+    dfa.add_state(TokenType::COMMENT_END, false);
+
+
     dfa.add_state(TokenType::LOGIC_AND_OPERATOR, true);
     dfa.add_state(TokenType::LOGIC_OR_OPERATOR, true);
     dfa.add_state(TokenType::AND_OPERATOR, true);
@@ -107,6 +111,27 @@ void Tokenizer::add_string() {
   dfa.add_transition(TokenType::QUOTE_OPEN, '"', TokenType::STRING);
 }
 
+void Tokenizer::add_comment() {
+  dfa.add_state(TokenType::COMMENT, true);
+  dfa.add_transition(0, '/', TokenType::FRONT_SLASH);
+  dfa.add_transition(TokenType::FRONT_SLASH, '*', TokenType::COMMENT_START);
+
+  for(char i = 'a'; i <= 'z'; i++) {
+    dfa.add_transition(TokenType::COMMENT_START, i, TokenType::COMMENT_START);
+    dfa.add_transition(TokenType::COMMENT_START, std::toupper(i), TokenType::COMMENT_START);
+  }
+
+  for(char i = '0'; i <= '9'; i++) {
+    dfa.add_transition(TokenType::COMMENT_START, i, TokenType::COMMENT_START);
+  }
+
+  dfa.add_transition(TokenType::COMMENT_START, ' ', TokenType::COMMENT_START);
+  dfa.add_transition(TokenType::COMMENT_START, '_', TokenType::COMMENT_START);
+
+  dfa.add_transition(TokenType::COMMENT_START, '*', TokenType::COMMENT_END);
+  dfa.add_transition(TokenType::COMMENT_END, '/', TokenType::COMMENT);
+}
+
 bool check_if_lexeme_is_reserved_keyword(std::string lexeme) {
   for(int i = 0; i < lexeme.size(); i++) {
     lexeme[i] = std::tolower(lexeme[i]);
@@ -125,6 +150,7 @@ Tokenizer::Tokenizer() {
   add_integer();
   add_double();
   add_string();
+  add_comment();
 }
 
 std::vector<Token> Tokenizer::tokenize(std::string in) {
