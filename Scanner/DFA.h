@@ -4,9 +4,9 @@ class DFA {
 private:
     int initial_state; // DFA's root node (q0)
     int current_state; // The current state the input has reached 
-    set <int> states; // The set of all states
-    set <int> final_states; // The set of all final states (To improve Complexity)
-    map <pair<int,char>, int> transitions; // The set of all transitions (Edges), which is a tuple of (source, edge value, destination) 
+    std::set <int> states; // The set of all states
+    std::set <int> final_states; // The set of all final states (To improve Complexity)
+    std::map <std::pair<int,char>, int> transitions; // The set of all transitions (Edges), which is a tuple of (source, edge value, destination) 
 public:
     DFA();
     void add_state(int, bool);

@@ -17,8 +17,8 @@ void DFA::add_state(int state_id, bool is_final) {
 
 // Adds a transition to the DFA's set of transitions
 void DFA::add_transition(int source, char edge_value, int destination) {
-    pair<int,char> edge = make_pair(source, edge_value);
-    transitions.insert(make_pair(edge, destination));
+    std::pair<int,char> edge = std::make_pair(source, edge_value);
+    transitions.insert(std::make_pair(edge, destination));
 }
 
 // Checks whether the state currently reached is an acceptable final state
@@ -28,10 +28,10 @@ bool DFA::is_accepted() {
 
 // Checks whether the state reached after taking the next transition will be accepted or not (stopping condition for Tokenizer)
 bool DFA::will_accept(char next) {
-    pair<int,char> cur_transition = make_pair(current_state, next);
+    std::pair<int,char> cur_transition = std::make_pair(current_state, next);
 
     if(transitions.count(cur_transition)) {
-        map<pair<int,char>, int>::iterator edge = transitions.find(cur_transition);
+        std::map<std::pair<int,char>, int>::iterator edge = transitions.find(cur_transition);
         return final_states.count(edge->second);
     }
     return false;
@@ -44,10 +44,10 @@ void DFA::reset() {
 
 // Inserts a character to the DFA (Moves along the edges)
 int DFA::insert(char in) {
-    pair<int, char> cur_transition = make_pair(current_state,in);
+    std::pair<int, char> cur_transition = std::make_pair(current_state,in);
 
     if(transitions.count(cur_transition)) {
-        map<pair<int,char>, int>::iterator edge = transitions.find(cur_transition);
+        std::map<std::pair<int,char>, int>::iterator edge = transitions.find(cur_transition);
         current_state = edge->second;
     }
     else {

@@ -1,98 +1,92 @@
 #include "Tokenizer.h"
 
-Tokenizer::Tokenizer() {
-  int intermediate_number = 1;
-  for(int i = 1; i <= 999; i++) {
-    dfa.add_state(i, false);
-  }
-  //Implement DFAs
-  // IDENTIFIER DFA
+void Tokenizer::add_symbols() {
+    dfa.add_state(TokenType::PARAN_OPEN, true);
+    dfa.add_state(TokenType::PARAN_CLOSE, true);
+    
+    dfa.add_state(TokenType::OPERATOR_PLUS, true);
+    dfa.add_state(TokenType::OPERATOR_MINUS, true);
+    dfa.add_state(TokenType::OPERATOR_TIMES, true);
+    dfa.add_state(TokenType::OPERATOR_ASSIGNMENT, true);
+    
+    dfa.add_state(TokenType::WHITESPACE, true);
+    
+    dfa.add_state(TokenType::QUOTE_OPEN, false);
+    dfa.add_state(TokenType::QUOTE_CLOSE, true);
+
+    dfa.add_transition(0, '(', TokenType::PARAN_OPEN);
+    dfa.add_transition(0, ')', TokenType::PARAN_CLOSE);
+    dfa.add_transition(0, '+', TokenType::OPERATOR_PLUS);
+    dfa.add_transition(0, '-', TokenType::OPERATOR_MINUS);
+    dfa.add_transition(0, '*', TokenType::OPERATOR_TIMES);
+    dfa.add_transition(0, '=', TokenType::OPERATOR_ASSIGNMENT);
+
+    dfa.add_transition(0, ' ', TokenType::WHITESPACE);
+    dfa.add_transition(TokenType::WHITESPACE, ' ', TokenType::WHITESPACE);
+}
+
+void Tokenizer::add_identifier() {
   dfa.add_state(TokenType::IDENTIFIER, true);
+
   for(char i = 'a'; i <= 'z'; i++) {
-    dfa.add_transition(0,i,TokenType::IDENTIFIER);
+    dfa.add_transition(0, i, TokenType::IDENTIFIER);
+    dfa.add_transition(0, std::toupper(i), TokenType::IDENTIFIER);
     dfa.add_transition(TokenType::IDENTIFIER, i, TokenType::IDENTIFIER);
-  }
-  for(int i = 'A'; i<='Z'; i++) {
-    dfa.add_transition(0,i,TokenType::IDENTIFIER);
-    dfa.add_transition(TokenType::IDENTIFIER, i, TokenType::IDENTIFIER);
-  }
-  for(int i = '0'; i<='9'; i++) {
-    dfa.add_transition(TokenType::IDENTIFIER, i, TokenType::IDENTIFIER);
-  }
-  // NUMBER DFA
-  dfa.add_state(TokenType::NUMBER, true);
-  for(int i = '0'; i<='9'; i++) {
-    dfa.add_transition(0,i,TokenType::NUMBER);
-    dfa.add_transition(TokenType::NUMBER, i, TokenType::NUMBER);
-  }
-  dfa.add_transition(TokenType::NUMBER, '.', TokenType::NUMBER);
-  // STRING DFA
-  dfa.add_state(TokenType::STRING, true);
-  dfa.add_transition(0,'"',intermediate_number);
-  for(char i = 'a'; i <= 'z'; i++) {
-    dfa.add_transition(intermediate_number, i, intermediate_number + 1);
-    dfa.add_transition(intermediate_number + 1, i, intermediate_number + 1);
-  }
-  for(int i = 'A'; i<='Z'; i++) {
-    dfa.add_transition(intermediate_number, i, intermediate_number + 1);
-    dfa.add_transition(intermediate_number + 1, i, intermediate_number + 1);
-  }
-  dfa.add_transition(intermediate_number + 1,'"',TokenType::STRING);
-  // COMMENT DFA
-  intermediate_number = 3;
-  dfa.add_state(TokenType::COMMENT, true);
-  dfa.add_transition(0, '/', intermediate_number);
-  dfa.add_transition(intermediate_number, '*', intermediate_number + 1);
-  for(char i = 'a'; i <= 'z'; i++) {
-    dfa.add_transition(intermediate_number, i, intermediate_number + 1);
-    dfa.add_transition(intermediate_number + 1, i, intermediate_number + 1);
-  }
-  for(int i = 'A'; i<='Z'; i++) {
-    dfa.add_transition(intermediate_number, i, intermediate_number + 1);
-    dfa.add_transition(intermediate_number + 1, i, intermediate_number + 1);
-  }
-  for(int i = '0'; i<='9'; i++) {
-    dfa.add_transition(intermediate_number, i, intermediate_number + 1);
-    dfa.add_transition(intermediate_number + 1, i, intermediate_number + 1);
-  }
-  dfa.add_transition(intermediate_number + 1, '*', intermediate_number + 2);
-  dfa.add_transition(intermediate_number + 2, '/', TokenType::COMMENT);
-  // RESERVED KEYWORDS DFA
-  intermediate_number = 6;
-  dfa.add_state(TokenType::RESERVED, true);
-  for(int i = 0; i < 13; i++) {
-    dfa.add_transition(0,CONSTANTS::RESERVED_WORDS[i][0], intermediate_number);
-    for(int j = 1; j < CONSTANTS::RESERVED_WORDS[i].size() - 1; j++) {
-      dfa.add_transition(intermediate_number + j, CONSTANTS::RESERVED_WORDS[i][j], intermediate_number + j + 1);
-    }
-    intermediate_number += CONSTANTS::RESERVED_WORDS[i].size();
-    add_transition(intermediate_number, CONSTANTS::RESERVED_WORDS[i][CONSTANTS::RESERVED_WORDS[i].size()-1], TokenType::RESERVED);
-  }
-  // ARITHMETIC OPERATOR DFA
-  dfa.add_state(TokenType::ARITHMETIC_OPERATOR, true);
-  dfa.add_transition(0,'+',TokenType::ARITHMETIC_OPERATOR);
-  dfa.add_transition(0,'-',TokenType::ARITHMETIC_OPERATOR);
-  dfa.add_transition(0,'*',TokenType::ARITHMETIC_OPERATOR);
-  dfa.add_transition(0,'/',TokenType::ARITHMETIC_OPERATOR);
-  // FUNCTION NAME DFA
-   dfa.add_state(TokenType::FUNCTION_NAME, true);
-  for(char i = 'a'; i <= 'z'; i++) {
-    dfa.add_transition(0,i,TokenType::FUNCTION_NAME);
-    dfa.add_transition(TokenType::FUNCTION_NAME, i, TokenType::FUNCTION_NAME);
-  }
-  for(int i = 'A'; i<='Z'; i++) {
-    dfa.add_transition(0,i,TokenType::FUNCTION_NAME);
-    dfa.add_transition(TokenType::FUNCTION_NAME, i, TokenType::FUNCTION_NAME);
-  }
-  for(int i = '0'; i<='9'; i++) {
-    dfa.add_transition(TokenType::FUNCTION_NAME, i, TokenType::FUNCTION_NAME);
+    dfa.add_transition(TokenType::IDENTIFIER, std::toupper(i), TokenType::IDENTIFIER);
   }
 }
 
-vector<Token> Tokenizer::tokenize(string in) {
-  vector<Token> ret;
-  string current_lexeme;
+void Tokenizer::add_integer() {
+  dfa.add_state(TokenType::INTEGER, true);
+
+  for(char i = '0'; i <= '9'; i++) {
+    dfa.add_transition(0, i, TokenType::INTEGER);
+    dfa.add_transition(TokenType::INTEGER, i, TokenType::INTEGER);
+  }
+}
+
+void Tokenizer::add_double() {
+  dfa.add_state(TokenType::DOUBLE, true);
+  
+  dfa.add_transition(TokenType::INTEGER, '.', TokenType::DOUBLE);
+
+  for(char i = '0'; i <= '9'; i++) {
+    dfa.add_transition(TokenType::DOUBLE, i, TokenType::DOUBLE);
+  }
+}
+
+void Tokenizer::add_string() {
+  dfa.add_state(TokenType::STRING, true);
+
+  dfa.add_transition(0,'"', TokenType::QUOTE_OPEN);
+
+  for(char i = 'a'; i <= 'z'; i++) {
+    dfa.add_transition(TokenType::QUOTE_OPEN, i, TokenType::QUOTE_OPEN);
+    dfa.add_transition(TokenType::QUOTE_OPEN, std::toupper(i), TokenType::QUOTE_OPEN);
+  }
+  for(char i = '0'; i <= '9'; i++) {
+    dfa.add_transition(TokenType::QUOTE_OPEN, i, TokenType::QUOTE_OPEN);
+  }
+  
+  dfa.add_transition(TokenType::QUOTE_OPEN, ' ', TokenType::QUOTE_OPEN);
+
+  dfa.add_transition(TokenType::QUOTE_OPEN, '"', TokenType::STRING);
+}
+
+Tokenizer::Tokenizer() {
+  dfa.add_state(0, false);
+  add_symbols();
+  add_identifier();
+  add_integer();
+  add_double();
+  add_string();
+}
+
+std::vector<Token> Tokenizer::tokenize(std::string in) {
+  std::vector<Token> ret;
+  std::string current_lexeme;
   dfa.reset();
+  in += '#';
   for(int i = 0; i < in.size() - 1; i++) {
     current_lexeme += in[i];
     dfa.insert(in[i]);
@@ -102,9 +96,16 @@ vector<Token> Tokenizer::tokenize(string in) {
       tmp_token.lexeme = current_lexeme;
       tmp_token.token_type = (TokenType)dfa.get_current_state();
       ret.push_back(tmp_token);
-      lexeme.clear();
+      current_lexeme.clear();
       dfa.reset();
     }
   }
+  if(ret.size() == 0) {
+    ret.push_back(Token());
+  }
+  Token eof;
+  eof.token_type = TokenType::END_OF_FILE;
+  eof.lexeme = "EOF";
+  ret.push_back(eof);
   return ret;
 }

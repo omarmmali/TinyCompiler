@@ -1,14 +1,15 @@
 #include "utilities.h"
 
 enum TokenType {
-  NUMBER = CONSTANTS::TOKEN_ID_START,
+  INVALID_TOKEN = CONSTANTS::TOKEN_ID_START,
+  INTEGER,
+  DOUBLE,
   STRING,
   COMMENT,
   RESERVED,
   IDENTIFIER,
   FUNCTION_CALL,
   TERM,
-  ARITHMETIC_OPERATOR,
   EQUATION,
   EXPRESSION,
   ASSIGNMENT_STATEMENT,
@@ -31,13 +32,27 @@ enum TokenType {
   FUNCTION_BODY,
   FUNCTION_STATEMENT,
   MAIN_FUNCTION,
-  PROGRAM
+  PROGRAM,
+  WHITESPACE,
+  PARAN_OPEN,
+  PARAN_CLOSE,
+  OPERATOR_PLUS,
+  OPERATOR_MINUS,
+  OPERATOR_TIMES,
+  OPERATOR_ASSIGNMENT,
+  QUOTE_OPEN,
+  QUOTE_CLOSE,
+  END_OF_FILE
 };
 
 struct Token {
   TokenType token_type;
-  string lexeme;
-  string token_name(TokenType token) {
+  std::string lexeme;
+  static std::string token_name(TokenType token) {
     return CONSTANTS::TOKEN_NAMES[token - CONSTANTS::TOKEN_ID_START];
+  }
+  Token() {
+    token_type = TokenType::INVALID_TOKEN;
+    lexeme = "";
   }
 };

@@ -1,20 +1,25 @@
 #pragma once
 
-#include <bits/stdc++.h>
-using namespace std;
+#include <iostream>
+#include <vector>
+#include <set>
+#include <map>
+#include <string>
 
 namespace CONSTANTS {
   const int TOKEN_ID_START = 1000;
-  const string TOKEN_NAMES[] = {
-  "NUMBER", "STRING", "COMMENT", "RESERVED", "IDENTIFIER", "FUNCTION_CALL",
-  "TERM", "ARITHMETIC_OPERATOR", "EQUATION", "EXPRESSION", "ASSIGNMENT_STATEMENT",
+  const std::string TOKEN_NAMES[] = {
+  "INVALID_TOKEN", "INTEGER", "DOUBLE", "STRING", "COMMENT", "RESERVED", "IDENTIFIER", "FUNCTION_CALL",
+  "TERM", "EQUATION", "EXPRESSION", "ASSIGNMENT_STATEMENT",
   "DATATYPE","DECLARATION_STATEMENT", "WRITE_STATEMENT", "READ_STATEMENT", "RETURN_STATEMENT",
   "CONDITIONAL_OPERATOR", "CONDITION", "BOOLEAN_OPERATOR", "CONDITIONAL_STATEMENT",
   "IF_STATEMENT", "ELSE_IF_STATEMENT", "ELSE_STATEMENT", "REPEAT_STATEMENT",
   "FUNCTION_NAME", "PARAMETER", "FUNCTION_DECLARATION", "FUNCTION_BODY",
-  "FUNCTION_STATEMENT", "MAIN_FUNCTION", "PROGRAM"
+  "FUNCTION_STATEMENT", "MAIN_FUNCTION", "PROGRAM", "WHITESPACE", "PARAN_OPEN",
+  "PARAN_CLOSE", "OPERATOR_PLUS", "OPERATOR_MINUS", "OPERATOR_TIMES", "OPERATOR_ASSIGNMENT", "QUOTE_OPEN",
+  "QUOTE_CLOSE", "END_OF_FILE"
   };
-  const string RESERVED_WORDS[] = {
+  const std::string RESERVED_WORDS[] = {
     "int", "float", "string", "read", "write", "repeat", "until", "if", "elseif", "else", "then", "return", "endl"
   };
 };
