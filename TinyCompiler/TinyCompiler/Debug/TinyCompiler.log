@@ -1,0 +1,6 @@
+﻿  Main.cpp
+d:\college\compiler\tinycompiler\tinycompiler\Main.h(293): warning C4018: '<': signed/unsigned mismatch
+d:\college\compiler\tinycompiler\tinycompiler\Main.h(325): warning C4244: 'initializing': conversion from 'wchar_t' to 'char', possible loss of data
+d:\college\compiler\tinycompiler\tinycompiler\Main.h(365): warning C4101: 'm': unreferenced local variable
+d:\college\compiler\tinycompiler\tinycompiler\Main.h(391): warning C4101: 'm': unreferenced local variable
+  TinyCompiler.vcxproj -> D:\college\Compiler\TinyCompiler\Debug\TinyCompiler.exe
